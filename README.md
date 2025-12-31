@@ -44,44 +44,45 @@ It allows users to configure an AI agent, select a model provider, choose a mode
 
 ```bash
 pip install fastapi uvicorn streamlit langchain langchain-openai langchain-groq langchain-tavily python-dotenv
+```
+Make sure your .env file contains:
+```ini
 OPENAI_API_KEY=your_key
 GROQ_API_KEY=your_key
 TAVILY_API_KEY=your_key
-▶ Running the Backend (FastAPI)
+```
+---
+## ▶ Running the Backend (FastAPI)
+```bash
 python Backend.py
-
+```
 
 FastAPI will open on:
-
+```cpp
 http://127.0.0.1:9999
-
-
+```
 Swagger docs:
-
+```arduino
 http://127.0.0.1:9999/docs
-
-💻 Running the Frontend (Streamlit)
+```
+---
+## 💻 Running the Frontend (Streamlit)
+```bash
 streamlit run frontend.py
-
-
+```
 Then open the local URL shown in the terminal.
-
-🧠 How the Agent Works
+---
+## 🧠 How the Agent Works
 
 AI agent is created dynamically based on:
 
-Provider (Groq or OpenAI)
-
-Model name
-
-System prompt
-
-Web search toggle
-
-User query
-
+* **Provider** (Groq or OpenAI)
+* **Model name**
+* **System prompt**
+* **Web search toggle**
+* **User query**
 Example call from backend:
-
+```python
 response = get_response_from_ai_agent(
     llm_id,
     query,
@@ -89,8 +90,16 @@ response = get_response_from_ai_agent(
     system_prompt,
     provider
 )
-
-🏗 Architecture Diagram
+```
+## 🏗 Architecture Diagram
+```scss
 User → Streamlit UI → FastAPI Backend → AI Agent (LangChain)
                                        ↳ LLM (Groq / OpenAI)
                                        ↳ Tavily Search (optional)
+```
+---
+## 📜 License
+MIT License.
+---
+## ⭐ Contribute
+Feel free to open issues or submit PRs!
