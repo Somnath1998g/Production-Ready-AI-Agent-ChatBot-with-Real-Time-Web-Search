@@ -37,7 +37,11 @@ def chat_endpoint(request: RequestState):
 # Step 3: Run app & Explore swagger UI Docs
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=9999)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+    #uvicorn.run(app, host="127.0.0.1", port=9999)
+    
 
 # {
 #   "model_name": "llama3-70b-8192",
