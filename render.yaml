@@ -1,0 +1,32 @@
+services:
+  # -----------------------------
+  # Backend: FastAPI AI Agent
+  # -----------------------------
+  - type: web
+    name: ai-agent-backend
+    env: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: python Backend.py
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+
+  # -----------------------------
+  # Frontend: Streamlit UI
+  # -----------------------------
+  - type: web
+    name: ai-agent-frontend
+    env: python
+    plan: free
+    rootDir: frontend
+    buildCommand: pip install -r ../requirements.txt
+    startCommand: >
+      streamlit run frontend.py
+      --server.port $PORT
+      --server.address 0.0.0.0
