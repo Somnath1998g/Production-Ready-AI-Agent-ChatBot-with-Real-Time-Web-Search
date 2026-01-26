@@ -28,7 +28,9 @@ user_query=st.text_area("Enter your query: ", height=150, placeholder="Ask Anyth
 #         response="Hi, this is dummy response from the AI Agent!"
 #         st.subheader("AI Agent Response:")
 #         st.markdown(f"**final Response: **{response}")
-API_URL= "http://127.0.0.1:9999/chat"
+#API_URL= "http://127.0.0.1:9999/chat"
+API_URL = "https://YOUR-BACKEND-RENDER-URL.onrender.com/chat"
+
 if st.button("Ask Agent!"):
     if user_query.strip():
         #Step2: Connect with backend via URL
