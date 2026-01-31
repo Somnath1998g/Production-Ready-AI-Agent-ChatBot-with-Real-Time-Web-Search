@@ -49,33 +49,35 @@ groq_llm = ChatGroq(model="llama-3.3-70b-versatile")
 # Tool (Tavily)
 search_tool = TavilySearch(max_results=2)
 
-# Create the agent (new API)
-def get_response_from_ai_agent(llm_id, query, allow_search, system_prompt, provider):
-    # Pick LLM
-    if provider == "Groq":
-        llm = ChatGroq(model=llm_id)
-    else:
-        llm = ChatOpenAI(model=llm_id)
-
-    # Tools (only if search enabled)
+def run_agent(llm, messages, system_prompt, allow_search):
     tools = [TavilySearch(max_results=2)] if allow_search else []
-
-    # Create agent
     agent = create_agent(
         model=llm,
         tools=tools,
         system_prompt=system_prompt,
     )
-
-    # Convert list[str] -> list[HumanMessage]
-    # Backend sends: ["hello"] so we wrap each into HumanMessage
-    messages = [HumanMessage(content=m) for m in query]
     state = {"messages": messages}
-
     response = agent.invoke(state)
-
-    # Return last assistant message text
     return response["messages"][-1].content
+
+def get_response_from_ai_agent(llm_id, query, allow_search, system_prompt, provider):
+    messages = [HumanMessage(content=m) for m in query]
+
+    # --- Try OpenAI first ---
+    if provider == "OpenAI":
+        try:
+            llm = ChatOpenAI(model=llm_id)
+            return run_agent(llm, messages, system_prompt, allow_search)
+        except Exception as e:
+            # Auto fallback to Groq
+            print("⚠️ OpenAI failed, falling back to Groq:", str(e))
+
+            llm = ChatGroq(model="llama-3.3-70b-versatile")
+            return run_agent(llm, messages, system_prompt, allow_search)
+
+    # --- Groq only ---
+    llm = ChatGroq(model=llm_id)
+    return run_agent(llm, messages, system_prompt, allow_search)
 # agent = create_agent(
 #     model=groq_llm,   # you can also pass "groq:llama-3.3-70b-versatile" as a string in some setups
 #     tools=[search_tool],
