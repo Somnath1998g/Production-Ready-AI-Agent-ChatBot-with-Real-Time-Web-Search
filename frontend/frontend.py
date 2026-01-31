@@ -29,7 +29,7 @@ user_query=st.text_area("Enter your query: ", height=150, placeholder="Ask Anyth
 #         st.subheader("AI Agent Response:")
 #         st.markdown(f"**final Response: **{response}")
 #API_URL= "http://127.0.0.1:9999/chat"
-API_URL = "https://YOUR-BACKEND-RENDER-URL.onrender.com/chat"
+API_URL = "https://ai-agent-backend-ov84.onrender.com/chat"
 
 if st.button("Ask Agent!"):
     if user_query.strip():
