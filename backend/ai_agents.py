@@ -51,31 +51,31 @@ search_tool = TavilySearch(max_results=2)
 
 # Create the agent (new API)
 def get_response_from_ai_agent(llm_id, query, allow_search, system_prompt, provider):
+    # Pick LLM
     if provider == "Groq":
         llm = ChatGroq(model=llm_id)
     else:
         llm = ChatOpenAI(model=llm_id)
 
+    # Tools (only if search enabled)
     tools = [TavilySearch(max_results=2)] if allow_search else []
 
+    # Create agent
     agent = create_agent(
         model=llm,
         tools=tools,
         system_prompt=system_prompt,
     )
 
-    # inputs = {
-    #     "messages": [
-    #         {"role": "user", "content": query}
-    #     ]
-    # }
-    state={"messages": query}
-    response = agent.invoke(state)
-    messages = response["messages"]
+    # Convert list[str] -> list[HumanMessage]
+    # Backend sends: ["hello"] so we wrap each into HumanMessage
+    messages = [HumanMessage(content=m) for m in query]
+    state = {"messages": messages}
 
-    # Last message is AI
-    ai_message = messages[-1].content
-    return ai_message
+    response = agent.invoke(state)
+
+    # Return last assistant message text
+    return response["messages"][-1].content
 # agent = create_agent(
 #     model=groq_llm,   # you can also pass "groq:llama-3.3-70b-versatile" as a string in some setups
 #     tools=[search_tool],
